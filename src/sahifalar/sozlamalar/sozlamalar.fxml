@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane fx:id="panel" prefHeight="620.0" prefWidth="527.0" styleClass="orqa"
+            stylesheets="@../../zaxira/dizayn/menyular.css" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="sahifalar.sozlamalar.Sozlamalar">
+    <ImageView pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../zaxira/rasmlar/sozlamalar/sozlamalar.png"/>
+    </ImageView>
+    <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="236.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../zaxira/rasmlar/sozlamalar/zombi.png"/>
+    </ImageView>
+    <ImageView fx:id="musiqa" fitHeight="34.0" fitWidth="25.0" layoutX="200.0" layoutY="150.0" onMousePressed="#Musiqa"
+               styleClass="surgich" pickOnBounds="true" preserveRatio="true" translateX="200.0">
+        <Image url="@../../zaxira/rasmlar/sozlamalar/surgich.png"/>
+    </ImageView>
+    <ImageView fx:id="tovush" fitHeight="34.0" fitWidth="25.0" layoutX="200.0" layoutY="185.0" onMousePressed="#Tovush"
+               styleClass="surgich" pickOnBounds="true" preserveRatio="true" translateX="200.0">
+        <Image url="@../../zaxira/rasmlar/sozlamalar/surgich.png"/>
+    </ImageView>
+    <Label layoutX="190.0" layoutY="375.0" onMouseClicked="#Chiqish" styleClass="kichik" text="O&#8216;yindan chiqish"/>
+    <Label layoutX="157.0" layoutY="430.0" onMouseClicked="#Boshiga" styleClass="kichik" text="Asosiy menyuga qaytish"/>
+    <Label layoutX="93.0" layoutY="510.0" styleClass="katta" text="O&#8216;yinga qaytish"/>
+</AnchorPane>

@@ -1,0 +1,31 @@
+.orqa {
+    -fx-background-color: transparent;
+}
+
+.menyular{
+    -fx-cursor: hand;
+}
+
+.label{
+    -fx-cursor: hand;
+    -fx-font-family: Samdan;
+    -fx-font-style: normal;
+    -fx-text-fill: #00C300;
+    -fx-effect: dropshadow(gaussian, black, 15, 0.3, 0, 0);
+}
+
+.label:hover{
+    -fx-text-fill: #01E901;
+}
+
+.surgich {
+    -fx-cursor: hand;
+}
+
+.kichik {
+    -fx-font-size: 24px;
+}
+
+.katta {
+    -fx-font-size: 45pt;
+}

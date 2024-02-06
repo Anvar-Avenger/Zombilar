@@ -1,0 +1,10 @@
+.maydon {
+    -fx-background-image: url("../rasmlar/sahna/yo'l.jpg");
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.quyosh {
+    -fx-cursor: hand;
+}

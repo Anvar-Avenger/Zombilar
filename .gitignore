@@ -1,0 +1,11 @@
+# Compiled class file
+*.class
+
+## IntelliJ
+.idea
+out
+*.iml
+
+## Visual Studio Code
+.vscode/
+.code-workspace

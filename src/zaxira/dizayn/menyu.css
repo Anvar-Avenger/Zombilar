@@ -1,0 +1,16 @@
+.root {
+    -fx-background-image: url("../rasmlar/asosiy.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+}
+
+.tugma {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.tugma:hover {
+    -fx-rotate: 2;
+}

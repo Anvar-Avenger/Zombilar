@@ -9,3 +9,7 @@ out
 ## Visual Studio Code
 .vscode/
 .code-workspace
+
+# Misc
+.DS_Store
+**/.DS_Store

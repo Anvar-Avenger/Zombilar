@@ -1,5 +1,6 @@
 package qismlar;
 
+import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -12,7 +13,7 @@ public class Yongoq extends ImageView {
 
     private Timeline t;
 
-    private int jon = 6;
+    private int jon = Tizim.YONGOQ_JON;
 
     public Yongoq() {
         setTranslateX(610);
@@ -25,12 +26,14 @@ public class Yongoq extends ImageView {
         jarayon();
     }
 
-    void jarayon() {
+    private void jarayon() {
         t = new Timeline(new KeyFrame(
                 Duration.millis(1),
                 hodisa -> {
-                    if (oldi()) {
+                    if (qutordi()) {
                         t.stop();
+
+                        // Remove nut from screen
                         ((AnchorPane) this.getParent()).getChildren().remove(this);
                     }
                 }
@@ -39,11 +42,11 @@ public class Yongoq extends ImageView {
         t.play();
     }
 
-    void zararlanish() {
+    protected void zararlanish() {
         jon--;
     }
 
-    boolean oldi() {
+    protected boolean qutordi() {
         return jon < 1;
     }
 

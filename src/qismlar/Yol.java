@@ -7,8 +7,10 @@ public class Yol {
 
     // int usti = 108, pasti = 35, chap = 320, ong = 146;
     // int eni = 900, boyi = 625;
+
     private final int uzunlik = 100;
     protected final int balandlik = 90;
+
     protected final int qatorlar = 5;
     private final int ustunlar = 9;
 
@@ -24,7 +26,7 @@ public class Yol {
         }
     }
 
-    public boolean tekshirish(ImageView osimlik) {
+    public boolean joyBor(ImageView osimlik) {
         for (int i = 0; i < ustunlar; i++) {
             for (int j = 0; j < qatorlar; j++) {
                 if (!ishlatildi[i][j] &&
@@ -41,6 +43,7 @@ public class Yol {
                 }
             }
         }
+
         return false;
     }
 }

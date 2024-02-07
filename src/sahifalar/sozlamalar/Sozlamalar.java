@@ -17,17 +17,21 @@ public class Sozlamalar {
     @FXML
     private ImageView tovush;
 
+    // Variable for volume range
     protected int kichik, katta;
-    private int m_x, t_x;
 
-    private int foiz_m = 100, foiz_t = 100;
+    // X coordinate for image views
+    private int mX, tX;
+
+    // Percentage volume of music and background effect
+    private int foizM = 100, foizT = 100;
 
     @FXML
     void Musiqa(MouseEvent hodisa) {
         panel.setOnMouseDragged(tortish -> {
-            m_x = (int) (tortish.getX() - musiqa.getFitWidth() / 2 - kichik);
-            musiqa.setTranslateX(m_x >= 0 && m_x <= kichik ? m_x : musiqa.getTranslateX());
-            foiz_m = (int) musiqa.getTranslateX() / 2;
+            mX = (int) (tortish.getX() - musiqa.getFitWidth() / 2 - kichik);
+            musiqa.setTranslateX(mX >= 0 && mX <= kichik ? mX : musiqa.getTranslateX());
+            foizM = (int) musiqa.getTranslateX() / 2;
         });
 
         if (hodisa.getClickCount() < 0)
@@ -37,9 +41,9 @@ public class Sozlamalar {
     @FXML
     void Tovush(MouseEvent hodisa) {
         panel.setOnMouseDragged(tortish -> {
-            t_x = (int) (tortish.getX() - tovush.getFitWidth() / 2 - kichik);
-            tovush.setTranslateX(t_x >= 0 && t_x <= kichik ? t_x : tovush.getTranslateX());
-            foiz_t = (int) tovush.getTranslateX() / 2;
+            tX = (int) (tortish.getX() - tovush.getFitWidth() / 2 - kichik);
+            tovush.setTranslateX(tX >= 0 && tX <= kichik ? tX : tovush.getTranslateX());
+            foizT = (int) tovush.getTranslateX() / 2;
         });
 
         if (hodisa.getClickCount() < 0)

@@ -23,6 +23,7 @@ public class Noxatotuvchi extends ImageView {
 
     private int i = 0;
     private int jon = 2;
+
     private boolean jangovor = false;
     private boolean belgilandi = false;
     private boolean ochirish = false;
@@ -36,14 +37,14 @@ public class Noxatotuvchi extends ImageView {
 
         setImage(erkin);
 
-        jangovor();
+        jangovorHolat();
     }
 
-    public void Zombi(ArrayList<Zombi> zombilar) {
+    public void zombilarBiriktirish(ArrayList<Zombi> zombilar) {
         this.zombilar = zombilar;
     }
 
-    void jangovor() {
+    private void jangovorHolat() {
         jangovor = true;
         t = new Timeline(new KeyFrame(
                 Duration.millis(20),
@@ -54,6 +55,7 @@ public class Noxatotuvchi extends ImageView {
                             if (getTranslateY() + getFitHeight() == ushbu.getTranslateY() + ushbu.getFitHeight() &&
                                     ushbu.bor() && ushbu.getTranslateX() > getTranslateX() + getFitWidth() / 2) {
                                 zombi = ushbu;
+
                                 belgilandi = true;
                                 jangovor = true;
                             }
@@ -69,8 +71,8 @@ public class Noxatotuvchi extends ImageView {
                                 jangovor = false;
                             }
 
-                            ((AnchorPane) this.getParent()).getChildren().add(new Noxat(getTranslateX() + getFitWidth() * 3 / 4,
-                                    getTranslateY() + 17, zombi));
+                            Noxat noxat = new Noxat(getTranslateX() + getFitWidth() * 3 / 4, getTranslateY() + 17, zombi);
+                            ((AnchorPane) this.getParent()).getChildren().add(noxat);
                         }
 
                         if (zombi.getTranslateX() < getTranslateX() + getFitWidth() / 2 && belgilandi) {
@@ -81,7 +83,7 @@ public class Noxatotuvchi extends ImageView {
                         if (i == 60)
                             i = 1;
 
-                        if (zombi.oldi()) {
+                        if (zombi.qutordi()) {
                             ochirish = true;
                             setImage(erkin);
                         }
@@ -96,10 +98,13 @@ public class Noxatotuvchi extends ImageView {
 
                     if (oldi()) {
                         t.stop();
+
+                        // Remove Pie-shooter after it die
                         ((AnchorPane) this.getParent()).getChildren().remove(this);
                     }
                 }
         ));
+
         t.setCycleCount(-1);
         t.play();
     }

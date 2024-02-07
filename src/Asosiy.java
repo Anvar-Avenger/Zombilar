@@ -18,10 +18,10 @@ public class Asosiy extends Application {
 
         URL manzil = Objects.requireNonNull(getClass().getResource("sahifalar/menyu.fxml"));
         Parent ildiz = FXMLLoader.load(manzil);
-        Scene yangi = new Scene(ildiz);
+        Scene sahna = new Scene(ildiz);
 
         ilova.setTitle("O\u2018simliklar va Zombilar");
-        ilova.setScene(yangi);
+        ilova.setScene(sahna);
         ilova.getIcons().add(new Image("zaxira/rasmlar/belgi.png"));
         ilova.setMaximized(true);
         ilova.setFullScreen(true);

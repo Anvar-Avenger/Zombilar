@@ -1,5 +1,6 @@
 package qismlar;
 
+import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -31,6 +32,7 @@ public class Zombi extends ImageView {
     private Kungaboqar kungaboqar;
     private Noxatotuvchi noxatotuvchi;
     private Yongoq yongoq;
+
     private ArrayList<Kungaboqar> kungaboqarlar;
     private ArrayList<Noxatotuvchi> noxatotuvchilar;
     private ArrayList<Yongoq> yongoqlar;
@@ -70,7 +72,7 @@ public class Zombi extends ImageView {
         this.yongoqlar = yongoqlar;
     }
 
-    void harakat() {
+    private void harakat() {
         x = -1;
         t = new Timeline(new KeyFrame(
                 Duration.millis(1000 / 30.), // 30 kard/s
@@ -111,7 +113,7 @@ public class Zombi extends ImageView {
                             x = 0;
                         }
 
-                        if (kungaboqar.oldi()) {
+                        if (kungaboqar.qulagan()) {
                             belgilandi = false;
                             x = -1;
                             kungaboqarlar.removeIf(ochirishga -> ochirishga == kungaboqar);
@@ -155,7 +157,7 @@ public class Zombi extends ImageView {
                             x = 0;
                         }
 
-                        if (yongoq.oldi()) {
+                        if (yongoq.qutordi()) {
                             belgilandi = false;
                             x = -1;
                             yongoqlar.removeIf(ochirishga -> ochirishga == yongoq);
@@ -172,7 +174,7 @@ public class Zombi extends ImageView {
                         qichqirish = false;
                     }
 
-                    if (getTranslateX() < 0 || oldi()) {
+                    if (getTranslateX() < 0 || qutordi()) {
                         oldi.play();
                         AnchorPane jism = (AnchorPane) this.getParent();
                         t.stop();
@@ -185,15 +187,15 @@ public class Zombi extends ImageView {
         t.play();
     }
 
-    void tegdi() {
+    protected void zararlanish() {
         jon--;
     }
 
-    boolean oldi() {
+    protected boolean qutordi() {
         return jon < 1;
     }
 
-    boolean bor() {
-        return getTranslateX() + getFitWidth() / 2 < 1366;
+    protected boolean bor() {
+        return getTranslateX() + getFitWidth() / 2 < Tizim.SCREEN_WIDTH;
     }
 }

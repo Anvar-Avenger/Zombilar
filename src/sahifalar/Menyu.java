@@ -24,11 +24,12 @@ public class Menyu {
     @FXML
     void initialize() {
         try {
-            URL manzil = Objects.requireNonNull(getClass()
-                    .getResource("../zaxira/ovozli-fayllar/crazy-dave-(intro-theme).mp3"));
+            URL manzil = Objects.requireNonNull(getClass().getResource(
+                    "../zaxira/ovozli-fayllar/crazy-dave-(intro-theme).mp3"
+            ));
 
             musiqa = new AudioClip(manzil.toString());
-            musiqa.setCycleCount(AudioClip.INDEFINITE); // cheksiz
+            musiqa.setCycleCount(AudioClip.INDEFINITE);
             musiqa.play();
         } catch (IllegalAccessError ex) {
             ex.printStackTrace();
@@ -44,10 +45,12 @@ public class Menyu {
             Node jism = (Node) hodisa.getSource();
             Scene yangi = jism.getScene();
 
+            // Start fade animation
             FadeTransition ft = new FadeTransition(Duration.seconds(0.5), jism.getParent());
             ft.setFromValue(1);
             ft.setToValue(0);
 
+            // Change scene/page
             ft.setOnFinished(keyin -> yangi.setRoot(ildiz));
             ft.play();
 
@@ -72,13 +75,11 @@ public class Menyu {
 
         try {
             URL sahifa = getClass().getResource("/sahifalar/sozlamalar/sozlamalar.fxml");
-
             Parent ildiz = FXMLLoader.load(Objects.requireNonNull(sahifa));
-
-            Stage ilova = new Stage();
             Scene yangi = new Scene(ildiz);
             yangi.setFill(Color.TRANSPARENT);
 
+            Stage ilova = new Stage();
             ilova.setScene(yangi);
             ilova.setTitle("Sozlamalar");
             ilova.setResizable(false);
@@ -86,9 +87,9 @@ public class Menyu {
             ilova.initStyle(StageStyle.TRANSPARENT);
             ilova.getIcons().add(((Stage) ((Node) hodisa.getSource()).getScene().getWindow()).getIcons().get(0));
             ilova.showAndWait();
-        } catch (Exception xatolik) {
+        } catch (Exception x) {
             System.out.println("Xatolik mavjud");
-            xatolik.printStackTrace();
+            x.printStackTrace();
         }
     }
 

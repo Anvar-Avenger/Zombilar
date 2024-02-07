@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import markaz.Tizim;
 import qismlar.*;
 
 import java.net.URL;
@@ -34,6 +35,7 @@ public class Sahna {
     private Kungaboqar kungaboqar;
     private Noxatotuvchi noxatotuvchi;
     private Yongoq yongoq;
+
     private final Yol yol = new Yol();
 
     private final ArrayList<Kungaboqar> kungaboqarlar = new ArrayList<>();
@@ -51,11 +53,20 @@ public class Sahna {
     @FXML
     void KungaboqarYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatK && olish(50)) {
+            if (!ruxsatK && uzish(50)) {
                 uzish.play();
-                kungaboqar = new Kungaboqar(quyosh);
+
+                kungaboqar = new Kungaboqar(yorqinlik -> {
+                    String matn = quyosh.getText();
+                    int son = Integer.parseInt(matn);
+
+                    // Increase score by reference of Label
+                    quyosh.setText(Integer.toString(son + yorqinlik));
+                });
                 kungaboqarlar.add(kungaboqar);
+
                 muhit.getChildren().add(kungaboqar);
+
                 ruxsatK = true;
                 ruxsat = true;
             }
@@ -64,12 +75,15 @@ public class Sahna {
     @FXML
     void NoxatotuvchiYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatN && olish(100)) {
+            if (!ruxsatN && uzish(100)) {
                 uzish.play();
+
                 noxatotuvchi = new Noxatotuvchi();
-                noxatotuvchi.Zombi(zombilar);
+                noxatotuvchi.zombilarBiriktirish(zombilar);
                 noxatotuvchilar.add(noxatotuvchi);
+
                 muhit.getChildren().add(noxatotuvchi);
+
                 ruxsatN = true;
                 ruxsat = true;
             }
@@ -78,10 +92,12 @@ public class Sahna {
     @FXML
     void YongoqYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatY && olish(50)) {
+            if (!ruxsatY && uzish(50)) {
                 uzish.play();
+
                 yongoq = new Yongoq();
                 yongoqlar.add(yongoq);
+
                 muhit.getChildren().add(yongoq);
                 ruxsatY = true;
                 ruxsat = true;
@@ -119,15 +135,15 @@ public class Sahna {
     }
 
     @FXML
-    void Joylashtirish(MouseEvent hodisa) {
+    public void Joylashtirish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
             Ochirish();
 
         if (ruxsatK && ruxsat) {
-            if (yol.tekshirish(kungaboqar)) {
+            if (yol.joyBor(kungaboqar)) {
                 ekish.play();
                 qirqish(50);
-                kungaboqar.ruxsat();
+                kungaboqar.ruxsatBerish();
                 ruxsat = false;
                 ruxsatK = false;
                 ochirishga = false;
@@ -135,7 +151,7 @@ public class Sahna {
         }
 
         if (ruxsatN && ruxsat) {
-            if (yol.tekshirish(noxatotuvchi)) {
+            if (yol.joyBor(noxatotuvchi)) {
                 ekish.play();
                 qirqish(100);
                 noxatotuvchi.ruxsat();
@@ -146,7 +162,7 @@ public class Sahna {
         }
 
         if (ruxsatY && ruxsat) {
-            if (yol.tekshirish(yongoq)) {
+            if (yol.joyBor(yongoq)) {
                 ekish.play();
                 qirqish(50);
                 ruxsat = false;
@@ -156,7 +172,7 @@ public class Sahna {
         }
     }
 
-    void Ochirish() {
+    private void Ochirish() {
         if (ruxsatK) {
             if (ochirish(gul, kungaboqar) && ochirishga) {
                 muhit.getChildren().remove(kungaboqar);
@@ -188,18 +204,19 @@ public class Sahna {
         }
     }
 
-    boolean ochirish(Pane jism, ImageView osimlik) {
+    private boolean ochirish(Pane jism, ImageView osimlik) {
         return !(osimlik.getTranslateX() + 20 < jism.getParent().getLayoutX() + jism.getLayoutX() ||
                 osimlik.getTranslateX() + osimlik.getFitWidth() - 20 > jism.getParent().getLayoutX() + jism.getLayoutX() + jism.getWidth() ||
                 osimlik.getTranslateY() + 5 < jism.getLayoutY() ||
                 osimlik.getTranslateY() + osimlik.getFitHeight() - 5 > jism.getLayoutY() + jism.getHeight());
     }
 
-    void qirqish(int qiymat) {
+    private void qirqish(int qiymat) {
         quyosh.setText(Integer.toString(Integer.parseInt(quyosh.getText()) - qiymat));
     }
 
-    boolean olish(int qiymat) {
+    //
+    private boolean uzish(int qiymat) {
         return qiymat <= Integer.parseInt(quyosh.getText());
     }
 
@@ -226,7 +243,7 @@ public class Sahna {
 
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.8), maydon);
         tt.setDelay(Duration.seconds(2));
-        tt.setToX(-(1790 - 1366));
+        tt.setToX(-(1790 - Tizim.SCREEN_WIDTH));
         tt.setOnFinished(yangi -> {
             TranslateTransition t = new TranslateTransition(Duration.seconds(0.8), maydon);
             t.setDelay(Duration.seconds(2));

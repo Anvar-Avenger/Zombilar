@@ -1,10 +1,10 @@
 package qismlar;
 
+import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -16,11 +16,14 @@ public class Kungaboqar extends ImageView {
     private final Timeline t = new Timeline();
 
     private int foiz = 0;
-    private int jon = 2;
+    private int jon = Tizim.KUNGABOQAR_JON;
 
-    boolean ruxsat = false;
+    private boolean ruxsat = false;
 
-    public Kungaboqar(Label quyosh) {
+    // Sun
+    private final SunBornListener sunBornListener;
+
+    public Kungaboqar(SunBornListener listener) {
         Image rasm = new Image("zaxira/rasmlar/qismlar/kungaboqar.gif");
 
         setTranslateX(410);
@@ -29,6 +32,9 @@ public class Kungaboqar extends ImageView {
         setFitHeight(90);
 
         setImage(rasm);
+
+        this.sunBornListener = listener;
+
         t.getKeyFrames().add(new KeyFrame(
                 Duration.millis(100),
                 jarayon -> {
@@ -36,7 +42,7 @@ public class Kungaboqar extends ImageView {
                         foiz++;
 
                         if (foiz == 20) {
-                            qoshish(quyosh);
+                            qoshish();
                         }
 
                         if (foiz == 100) {
@@ -44,8 +50,10 @@ public class Kungaboqar extends ImageView {
                         }
                     }
 
-                    if (oldi()) {
+                    if (qulagan()) {
                         t.stop();
+
+                        // Remove sunflower after it
                         ((AnchorPane) this.getParent()).getChildren().remove(this);
                     }
                 }
@@ -54,35 +62,51 @@ public class Kungaboqar extends ImageView {
         t.play();
     }
 
-    void qoshish(Label quyosh_soni) {
+    private void qoshish() {
+        // Create new sun
+        Quyosh quyosh = new Quyosh(getTranslateX(), getTranslateY() - 5, sunBornListener::onSunrise);
+
+        // Append sun to parent node
         AnchorPane jism = (AnchorPane) this.getParent();
-        Quyosh quyosh = new Quyosh(getTranslateX(), getTranslateY() - 5, quyosh_soni);
         jism.getChildren().add(quyosh);
 
+        // To move sun top-right edge of sunflower
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), quyosh);
         tt.setByX(50);
         tt.setByY(-10);
         tt.play();
 
+        // Scale smoothly sun
         ScaleTransition st = new ScaleTransition(Duration.seconds(0.5), quyosh);
         st.setToX(1);
         st.setToY(1);
         st.play();
     }
 
-    public void ruxsat() {
+    /**
+     * Permit planting sunflower
+     */
+    public void ruxsatBerish() {
         ruxsat = true;
-    }
-
-    void zararlanish() {
-        jon--;
-    }
-
-    boolean oldi() {
-        return jon < 1;
     }
 
     public int y() {
         return 10;
+    }
+
+    protected void zararlanish() {
+        jon--;
+    }
+
+    /**
+     * To check sunflower is dead
+     */
+    protected boolean qulagan() {
+        return jon < 1;
+    }
+
+
+    public interface SunBornListener {
+        void onSunrise(int brightness);
     }
 }

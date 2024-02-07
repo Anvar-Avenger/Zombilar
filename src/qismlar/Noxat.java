@@ -1,5 +1,6 @@
 package qismlar;
 
+import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -16,7 +17,7 @@ public class Noxat extends ImageView {
 
     private Timeline t;
 
-    private final AudioClip tegdi;
+    private final AudioClip tegishOvoz;
 
     Noxat(double x, double y, Zombi zombi) {
         setImage(new Image("/zaxira/rasmlar/qismlar/noxat.png"));
@@ -28,26 +29,32 @@ public class Noxat extends ImageView {
         setFitHeight(24);
 
         URL manzil = getClass().getResource("/zaxira/ovozli-fayllar/noxat-tegishi.wav");
-        tegdi = new AudioClip(Objects.requireNonNull(manzil).toString());
+        tegishOvoz = new AudioClip(Objects.requireNonNull(manzil).toString());
 
-        harakat(zombi);
+        harakatlanish(zombi);
     }
 
-    void harakat(Zombi zombi) {
-        t = new Timeline(new KeyFrame(
+    private void harakatlanish(Zombi zombi) {
+        KeyFrame frame = new KeyFrame(
                 Duration.millis(2.5),
                 jarayon -> {
                     setTranslateX(getTranslateX() + 1);
 
-                    if (getTranslateX() + getFitWidth() > zombi.getTranslateX() || getTranslateX() > 1366) {
-                        tegdi.play();
-                        zombi.tegdi();
+                    if (getTranslateX() + getFitWidth() > zombi.getTranslateX() || getTranslateX() > Tizim.SCREEN_WIDTH) {
+                        tegishOvoz.play();
+
+                        // Crash pie with Zombie
+                        zombi.zararlanish();
+
                         t.stop();
+                        // Remove pie from screen
                         ((AnchorPane) this.getParent()).getChildren().remove(this);
                     }
                 }
-        ));
-        t.setCycleCount(-1);
+        );
+
+        t = new Timeline(frame);
+        t.setCycleCount(Timeline.INDEFINITE);
         t.play();
     }
 }

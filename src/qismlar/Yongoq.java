@@ -1,15 +1,14 @@
 package qismlar;
 
-import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import markaz.Tizim;
 
 
-public class Yongoq extends ImageView {
+public class Yongoq extends Osimlik {
 
     private Timeline t;
 

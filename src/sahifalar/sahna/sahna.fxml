@@ -23,7 +23,7 @@
                 </ImageView>
             </Pane>
             <Label fx:id="quyosh" alignment="CENTER" layoutX="12.5" layoutY="90.0" prefHeight="34.0" prefWidth="85.0"
-                   styleClass="matn" text="250" textAlignment="CENTER"/>
+                   styleClass="matn" text="0" textAlignment="CENTER"/>
         </Pane>
 
         <!-- Sunflower -->

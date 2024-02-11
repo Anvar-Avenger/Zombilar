@@ -1,6 +1,5 @@
 package qismlar;
 
-import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -8,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import markaz.Tizim;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,11 +40,15 @@ public class Zombi extends ImageView {
     private boolean qichqirish = true;
     private boolean belgilandi = false;
 
+    private PlantEatListener tinglovchi;
+
     public Zombi() {
+        // Set width and height
         setImage(new Image("zaxira/rasmlar/qismlar/zombi.gif"));
         setFitWidth(80);
         setFitHeight(136);
-        setTranslateX(1466 +
+
+        setTranslateX(Tizim.SCREEN_WIDTH + 10 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
@@ -72,118 +76,129 @@ public class Zombi extends ImageView {
         this.yongoqlar = yongoqlar;
     }
 
+    public void addPlantEatListener(PlantEatListener listener) {
+        this.tinglovchi = listener;
+    }
+
     private void harakat() {
         x = -1;
-        t = new Timeline(new KeyFrame(
-                Duration.millis(1000 / 30.), // 30 kard/s
-                jarayon -> {
-                    if (!belgilandi) {
-                        kungaboqarlar.forEach(ushbu -> {
-                            if (getTranslateX() <= ushbu.getTranslateX() + ushbu.getFitWidth() &&
-                                    getTranslateY() + getFitHeight() == ushbu.getTranslateY() + ushbu.getFitHeight()) {
-                                kungaboqar = ushbu;
-                                belgilandi = true;
-                            }
-                        });
-                        noxatotuvchilar.forEach(ushbu -> {
-                            if (getTranslateX() <= ushbu.getTranslateX() + ushbu.getFitWidth() &&
-                                    getTranslateY() + getFitHeight() == ushbu.getTranslateY() + ushbu.getFitHeight()) {
-                                noxatotuvchi = ushbu;
-                                belgilandi = true;
-                            }
-                        });
-                        yongoqlar.forEach(ushbu -> {
-                            if (getTranslateX() <= ushbu.getTranslateX() + ushbu.getFitWidth() &&
-                                    getTranslateY() + getFitHeight() == ushbu.getTranslateY() + ushbu.getFitHeight()) {
-                                yongoq = ushbu;
-                                belgilandi = true;
-                            }
-                        });
+
+        // 30 kard/s
+        t = new Timeline(new KeyFrame(Duration.millis(1000 / 30.), jarayon -> {
+            if (!belgilandi) {
+                kungaboqarlar.forEach(kungaboqar -> {
+                    if (getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() &&
+                            getTranslateY() + getFitHeight() == kungaboqar.getTranslateY() + kungaboqar.getFitHeight()) {
+                        this.kungaboqar = kungaboqar;
+                        belgilandi = true;
                     }
-
-                    /* qismlar.Kungaboqar uchun */
-                    if (kungaboqar != null) {
-                        if (getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() - 10 &&
-                                getTranslateX() > kungaboqar.getTranslateX()) {
-                            foiz++;
-                            if (foiz == 100) {
-                                kungaboqar.zararlanish();
-                                foiz = 0;
-                            }
-                            x = 0;
-                        }
-
-                        if (kungaboqar.qulagan()) {
-                            belgilandi = false;
-                            x = -1;
-                            kungaboqarlar.removeIf(ochirishga -> ochirishga == kungaboqar);
-                            kungaboqar = null;
-                            foiz = 0;
-                        }
+                });
+                noxatotuvchilar.forEach(noxatotuvchi -> {
+                    if (getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() &&
+                            getTranslateY() + getFitHeight() == noxatotuvchi.getTranslateY() + noxatotuvchi.getFitHeight()) {
+                        this.noxatotuvchi = noxatotuvchi;
+                        belgilandi = true;
                     }
-                    /*~*/
-
-                    /* qismlar.Noxatotuvchi uchun */
-                    if (noxatotuvchi != null) {
-                        if (getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() - 10 &&
-                                getTranslateX() > noxatotuvchi.getTranslateX()) {
-                            foiz++;
-                            if (foiz == 100) {
-                                noxatotuvchi.zararlanish();
-                                foiz = 0;
-                            }
-                            x = 0;
-                        }
-
-                        if (noxatotuvchi.oldi()) {
-                            belgilandi = false;
-                            x = -1;
-                            noxatotuvchilar.removeIf(ochirishga -> ochirishga == noxatotuvchi);
-                            noxatotuvchi = null;
-                            foiz = 0;
-                        }
+                });
+                yongoqlar.forEach(yongoq -> {
+                    if (getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() &&
+                            getTranslateY() + getFitHeight() == yongoq.getTranslateY() + yongoq.getFitHeight()) {
+                        this.yongoq = yongoq;
+                        belgilandi = true;
                     }
-                    /*~*/
+                });
+            }
 
-                    /* Yong'oq uchun */
-                    if (yongoq != null) {
-                        if (getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() - 10 &&
-                                getTranslateX() > yongoq.getTranslateX()) {
-                            foiz++;
-                            if (foiz == 100) {
-                                yongoq.zararlanish();
-                                foiz = 0;
-                            }
-                            x = 0;
-                        }
-
-                        if (yongoq.qutordi()) {
-                            belgilandi = false;
-                            x = -1;
-                            yongoqlar.removeIf(ochirishga -> ochirishga == yongoq);
-                            yongoq = null;
-                            foiz = 0;
-                        }
+            /* qismlar.Kungaboqar uchun */
+            if (kungaboqar != null) {
+                if (getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() - 10 &&
+                        getTranslateX() > kungaboqar.getTranslateX()) {
+                    foiz++;
+                    if (foiz == 100) {
+                        kungaboqar.zararlanish();
+                        foiz = 0;
                     }
-                    /*~*/
-
-                    setTranslateX(getTranslateX() + x);
-
-                    if (getTranslateX() < 1200 && qichqirish) {
-                        ovoz.play();
-                        qichqirish = false;
-                    }
-
-                    if (getTranslateX() < 0 || qutordi()) {
-                        oldi.play();
-                        AnchorPane jism = (AnchorPane) this.getParent();
-                        t.stop();
-                        jism.getChildren().remove(this);
-                    }
+                    x = 0;
                 }
-        ));
+
+                if (kungaboqar.qulagan()) {
+                    belgilandi = false;
+                    x = -1;
+
+                    tinglovchi.onEat(kungaboqar);
+
+                    kungaboqarlar.removeIf(jism -> jism == kungaboqar);
+                    kungaboqar = null;
+
+                    foiz = 0;
+                }
+            }
+            /*~*/
+
+            /* qismlar.Noxatotuvchi uchun */
+            if (noxatotuvchi != null) {
+                if (getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() - 10 &&
+                        getTranslateX() > noxatotuvchi.getTranslateX()) {
+                    foiz++;
+                    if (foiz == 100) {
+                        noxatotuvchi.zararlanish();
+                        foiz = 0;
+                    }
+                    x = 0;
+                }
+
+                if (noxatotuvchi.oldi()) {
+                    belgilandi = false;
+                    x = -1;
+                    noxatotuvchilar.removeIf(ochirishga -> ochirishga == noxatotuvchi);
+                    noxatotuvchi = null;
+                    foiz = 0;
+                }
+            }
+            /*~*/
+
+            /* Yong'oq uchun */
+            if (yongoq != null) {
+                if (getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() - 10 &&
+                        getTranslateX() > yongoq.getTranslateX()) {
+                    foiz++;
+                    if (foiz == 100) {
+                        yongoq.zararlanish();
+                        foiz = 0;
+                    }
+                    x = 0;
+                }
+
+                if (yongoq.qutordi()) {
+                    belgilandi = false;
+                    x = -1;
+                    yongoqlar.removeIf(ochirishga -> ochirishga == yongoq);
+                    yongoq = null;
+                    foiz = 0;
+                }
+            }
+            /*~*/
+
+            setTranslateX(getTranslateX() + x);
+
+            if (getTranslateX() < 1200 && qichqirish) {
+                ovoz.play();
+                qichqirish = false;
+            }
+
+            if (getTranslateX() < 0 || qutordi()) {
+                oldi.play();
+
+                // Remove Zombie from view
+                AnchorPane jism = (AnchorPane) this.getParent();
+                jism.getChildren().remove(this);
+
+                t.stop();
+            }
+        }));
+
         t.setDelay(Duration.seconds(30));
-        t.setCycleCount(-1);
+        t.setCycleCount(Timeline.INDEFINITE);
         t.play();
     }
 
@@ -197,5 +212,9 @@ public class Zombi extends ImageView {
 
     protected boolean bor() {
         return getTranslateX() + getFitWidth() / 2 < Tizim.SCREEN_WIDTH;
+    }
+
+    public interface PlantEatListener {
+        void onEat(Osimlik osimlik);
     }
 }

@@ -10,6 +10,9 @@ public interface Tizim {
     int KUNGABOQAR_JON = 2;
     int QUYOSH_YORQINLIGI = 25;
 
+    /* Sun */
+    int QUYOSHLAR = 250;
+
     /* Nut */
     int YONGOQ_JON = 6;
 }

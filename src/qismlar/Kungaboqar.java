@@ -1,17 +1,16 @@
 package qismlar;
 
-import markaz.Tizim;
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import markaz.Tizim;
 
 
-public class Kungaboqar extends ImageView {
+public class Kungaboqar extends Osimlik {
 
     private final Timeline t = new Timeline();
 
@@ -26,8 +25,11 @@ public class Kungaboqar extends ImageView {
     public Kungaboqar(SunBornListener listener) {
         Image rasm = new Image("zaxira/rasmlar/qismlar/kungaboqar.gif");
 
+        // Set position
         setTranslateX(410);
         setTranslateY(y());
+
+        // Set with and height
         setFitWidth(rasm.getWidth() < 100 ? rasm.getWidth() : 100);
         setFitHeight(90);
 
@@ -35,28 +37,26 @@ public class Kungaboqar extends ImageView {
 
         this.sunBornListener = listener;
 
-        t.getKeyFrames().add(new KeyFrame(
-                Duration.millis(100),
-                jarayon -> {
-                    if (ruxsat) {
-                        foiz++;
+        t.getKeyFrames().add(new KeyFrame(Duration.millis(100), jarayon -> {
+            if (ruxsat) {
+                foiz++;
 
-                        if (foiz == 20) {
-                            qoshish();
-                        }
-
-                        if (foiz == 100) {
-                            foiz = 0;
-                        }
-                    }
-
-                    if (qulagan()) {
-                        t.stop();
-
-                        // Remove sunflower after it
-                        ((AnchorPane) this.getParent()).getChildren().remove(this);
-                    }
+                if (foiz == 20) {
+                    qoshish();
                 }
+
+                if (foiz == 100) {
+                    foiz = 0;
+                }
+            }
+
+            if (qulagan()) {
+                t.stop();
+
+                // Remove sunflower after it
+                ((AnchorPane) this.getParent()).getChildren().remove(this);
+            }
+        }
         ));
         t.setCycleCount(-1);
         t.play();

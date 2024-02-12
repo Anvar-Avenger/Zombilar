@@ -22,23 +22,9 @@ public class Yongoq extends Osimlik {
 
         Image rasm = new Image("zaxira/rasmlar/qismlar/nut.gif");
         setImage(rasm);
+
+        // Check for die
         jarayon();
-    }
-
-    private void jarayon() {
-        t = new Timeline(new KeyFrame(
-                Duration.millis(1),
-                hodisa -> {
-                    if (qutordi()) {
-                        t.stop();
-
-                        // Remove nut from screen
-                        ((AnchorPane) this.getParent()).getChildren().remove(this);
-                    }
-                }
-        ));
-        t.setCycleCount(-1);
-        t.play();
     }
 
     protected void zararlanish() {
@@ -51,5 +37,18 @@ public class Yongoq extends Osimlik {
 
     public int y() {
         return 10;
+    }
+
+    private void jarayon() {
+        t = new Timeline(new KeyFrame(Duration.millis(1), hodisa -> {
+            if (qutordi()) {
+                t.stop();
+
+                // Remove nut from screen
+                ((AnchorPane) this.getParent()).getChildren().remove(this);
+            }
+        }));
+        t.setCycleCount(Timeline.INDEFINITE);
+        t.play();
     }
 }

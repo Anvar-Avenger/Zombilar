@@ -41,7 +41,8 @@ public class Menyu {
         musiqa.stop();
 
         try {
-            Parent ildiz = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/sahifalar/sahna/sahna.fxml")));
+            URL manzil = Objects.requireNonNull(getClass().getResource("/sahifalar/sahna/sahna.fxml"));
+            Parent ildiz = FXMLLoader.load(manzil);
             Node jism = (Node) hodisa.getSource();
             Scene yangi = jism.getScene();
 
@@ -64,6 +65,7 @@ public class Menyu {
     void Davomi(MouseEvent hodisa) {
         URL manzil = getClass().getResource("/zaxira/ovozli-fayllar/menyudan-qochish.wav");
         new AudioClip(Objects.requireNonNull(manzil).toString()).play();
+
         if (hodisa.getClickCount() > 0)
             System.out.println("Ushbu funksiya ishlamaydi");
     }

@@ -1,6 +1,5 @@
 package qismlar;
 
-import markaz.Tizim;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
@@ -8,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import markaz.Tizim;
 
 import java.net.URL;
 import java.util.Objects;
@@ -17,9 +17,11 @@ public class Quyosh extends ImageView {
 
     private final int yorqinlik = Tizim.QUYOSH_YORQINLIGI;
 
-    private final SunriseListener sunriseListener;
+    private final QuyoshChiqishTinglovchisi tinglovchi;
 
-    Quyosh(double x, double y, SunriseListener listener) {
+    private final int chetlanish = 15;
+
+    Quyosh(double x, double y, QuyoshChiqishTinglovchisi tinglovchi) {
         setImage(new Image("zaxira/rasmlar/qismlar/quyosh.png"));
 
         setFitWidth(0);
@@ -31,7 +33,7 @@ public class Quyosh extends ImageView {
         getStyleClass().add("quyosh");
 
         // Add event listener
-        sunriseListener = listener;
+        this.tinglovchi = tinglovchi;
         hodisaBiriktirish();
     }
 
@@ -49,8 +51,8 @@ public class Quyosh extends ImageView {
 
             // Moving sun smoothly to score corner
             TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-            tt.setToX(312 - 15);
-            tt.setToY(20 - 15);
+            tt.setToX(312 - chetlanish);
+            tt.setToY(20 - chetlanish);
 
             // After finishing animation
             tt.setOnFinished(f -> {
@@ -58,15 +60,15 @@ public class Quyosh extends ImageView {
                 jism.getChildren().remove(this);
 
                 // Notify sun fully rise
-                sunriseListener.onSunrise(yorqinlik);
+                tinglovchi.onSunrise(yorqinlik);
             });
             tt.play();
         });
     }
 
     // Listener to inter-components
-    interface SunriseListener {
+    interface QuyoshChiqishTinglovchisi {
 
-        void onSunrise(int degree);
+        void onSunrise(int yorqinlik);
     }
 }

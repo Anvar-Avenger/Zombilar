@@ -40,7 +40,7 @@ public class Noxat extends ImageView {
                 jarayon -> {
                     setTranslateX(getTranslateX() + 1);
 
-                    if (getTranslateX() + getFitWidth() > zombi.getTranslateX() || getTranslateX() > Tizim.SCREEN_WIDTH) {
+                    if (getTranslateX() + getFitWidth() > zombi.getTranslateX() || getTranslateX() > Tizim.EKRAN_ENI) {
                         tegishOvoz.play();
 
                         // Crash pie with Zombie

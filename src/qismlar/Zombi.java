@@ -25,8 +25,9 @@ public class Zombi extends ImageView {
     private final Yol yol = new Yol();
 
     protected int[] y = yol.y;
-    private int jon = 10;
-    private int x = 0;
+
+    private int jon = Tizim.ZOMBI_JON;
+    private int v = 0;
     private int foiz = 0;
 
     private Kungaboqar kungaboqar;
@@ -48,7 +49,7 @@ public class Zombi extends ImageView {
         setFitWidth(80);
         setFitHeight(136);
 
-        setTranslateX(Tizim.SCREEN_WIDTH + 10 +
+        setTranslateX(Tizim.EKRAN_ENI + 10 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
@@ -81,7 +82,7 @@ public class Zombi extends ImageView {
     }
 
     private void harakat() {
-        x = -1;
+        v = -1;
 
         // 30 kard/s
         t = new Timeline(new KeyFrame(Duration.millis(1000 / 30.), jarayon -> {
@@ -118,12 +119,13 @@ public class Zombi extends ImageView {
                         kungaboqar.zararlanish();
                         foiz = 0;
                     }
-                    x = 0;
+
+                    v = 0;
                 }
 
                 if (kungaboqar.qulagan()) {
                     belgilandi = false;
-                    x = -1;
+                    v = -1;
 
                     tinglovchi.onEat(kungaboqar);
 
@@ -144,12 +146,13 @@ public class Zombi extends ImageView {
                         noxatotuvchi.zararlanish();
                         foiz = 0;
                     }
-                    x = 0;
+                    v = 0;
                 }
 
-                if (noxatotuvchi.oldi()) {
+                if (noxatotuvchi.qutordi()) {
                     belgilandi = false;
-                    x = -1;
+                    v = -1;
+
                     noxatotuvchilar.removeIf(ochirishga -> ochirishga == noxatotuvchi);
                     noxatotuvchi = null;
                     foiz = 0;
@@ -166,12 +169,12 @@ public class Zombi extends ImageView {
                         yongoq.zararlanish();
                         foiz = 0;
                     }
-                    x = 0;
+                    v = 0;
                 }
 
                 if (yongoq.qutordi()) {
                     belgilandi = false;
-                    x = -1;
+                    v = -1;
                     yongoqlar.removeIf(ochirishga -> ochirishga == yongoq);
                     yongoq = null;
                     foiz = 0;
@@ -179,7 +182,8 @@ public class Zombi extends ImageView {
             }
             /*~*/
 
-            setTranslateX(getTranslateX() + x);
+            // Move to x
+            setTranslateX(getTranslateX() + v);
 
             if (getTranslateX() < 1200 && qichqirish) {
                 ovoz.play();
@@ -211,7 +215,7 @@ public class Zombi extends ImageView {
     }
 
     protected boolean bor() {
-        return getTranslateX() + getFitWidth() / 2 < Tizim.SCREEN_WIDTH;
+        return getTranslateX() + getFitWidth() / 2 < Tizim.EKRAN_ENI;
     }
 
     public interface PlantEatListener {

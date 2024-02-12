@@ -5,13 +5,14 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import markaz.Tizim;
 
 import java.util.ArrayList;
 
 
 public class Noxatotuvchi extends Osimlik {
 
-    private final Image rasm = new Image("zaxira/rasmlar/qismlar/noxatotuvchi.gif");
+    private final Image harakatda = new Image("zaxira/rasmlar/qismlar/noxatotuvchi.gif");
     private final Image erkin = new Image("zaxira/rasmlar/qismlar/noxatotuvchi-erkin.gif");
 
     private Timeline t;
@@ -20,101 +21,108 @@ public class Noxatotuvchi extends Osimlik {
     private Zombi zombi;
     private ArrayList<Zombi> zombilar;
 
-    private int i = 0;
-    private int jon = 2;
+    private int oraliq = 0;
+    private int jon = Tizim.NOXATOTUVCHI_JON;
 
+    // Holatlar
+    private boolean ekilgan = false;
     private boolean jangovor = false;
-    private boolean belgilandi = false;
-    private boolean ochirish = false;
-    private boolean ruxsat = false;
+
+    // This status check this flower select its enemy
+    private boolean tanladi = false;
 
     public Noxatotuvchi() {
         setTranslateX(510);
         setTranslateY(y());
+
         setFitWidth(94);
         setFitHeight(90);
 
         setImage(erkin);
 
-        jangovorHolat();
+        harakatlanish();
     }
 
     public void zombilarBiriktirish(ArrayList<Zombi> zombilar) {
         this.zombilar = zombilar;
     }
 
-    private void jangovorHolat() {
+    private void harakatlanish() {
+
         jangovor = true;
 
         t = new Timeline(new KeyFrame(Duration.millis(20), jarayon -> {
-            if (!belgilandi) {
+            if (!ekilgan) {
+                return;
+            }
+
+            // Find enemy which it is walking flower's line
+            if (!tanladi) {
                 zombilar.forEach(zombi -> {
                     if (getTranslateY() + getFitHeight() == zombi.getTranslateY() + zombi.getFitHeight() &&
                             zombi.bor() && zombi.getTranslateX() > getTranslateX() + getFitWidth() / 2) {
                         this.zombi = zombi;
 
-                        belgilandi = true;
+                        tanladi = true;
                         jangovor = true;
                     }
                 });
             }
 
-            if (zombi != null && ruxsat) {
-                i++;
-                if (i == 15 && getTranslateX() + getFitWidth() / 2 < zombi.getTranslateX()) {
+            if (tanladi) {
+                oraliq++;
 
+                if (oraliq == 15 && getTranslateX() + getFitWidth() / 2 < zombi.getTranslateX()) {
                     if (jangovor) {
-                        setImage(rasm);
+                        setImage(harakatda);
                         jangovor = false;
                     }
 
                     Noxat noxat = new Noxat(getTranslateX() + getFitWidth() * 3 / 4, getTranslateY() + 17, zombi);
-                    ((AnchorPane) this.getParent()).getChildren().add(noxat);
+                    AnchorPane qobiq = (AnchorPane) this.getParent();
+                    qobiq.getChildren().add(noxat);
                 }
 
-                if (zombi.getTranslateX() < getTranslateX() + getFitWidth() / 2 && belgilandi) {
-                    belgilandi = false;
+                if (zombi.getTranslateX() < getTranslateX() + getFitWidth() / 2 && tanladi) {
+                    tanladi = false;
                     setImage(erkin);
                 }
 
-                if (i == 60)
-                    i = 1;
+                if (oraliq == 60)
+                    oraliq = 1;
 
                 if (zombi.qutordi()) {
-                    ochirish = true;
                     setImage(erkin);
+
+                    zombilar.removeIf(jism -> jism == zombi);
+                    zombi = null;
+
+                    tanladi = false;
                 }
             }
 
-            if (ochirish) {
-                zombilar.removeIf(ochirishga -> ochirishga == zombi);
-                zombi = null;
-                belgilandi = false;
-                ochirish = false;
-            }
-
-            if (oldi()) {
+            if (qutordi()) {
                 t.stop();
 
                 // Remove Pie-shooter after it die
-                ((AnchorPane) this.getParent()).getChildren().remove(this);
+                AnchorPane qobiq = (AnchorPane) this.getParent();
+                qobiq.getChildren().remove(this);
             }
-        }
-        ));
+        }));
 
         t.setCycleCount(-1);
         t.play();
     }
 
-    void zararlanish() {
+    protected void zararlanish() {
         jon--;
     }
 
-    public void ruxsat() {
-        ruxsat = true;
+    public void ekildi() {
+        ekilgan = true;
     }
 
-    boolean oldi() {
+    protected boolean qutordi() {
         return jon < 1;
     }
 

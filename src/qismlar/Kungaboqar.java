@@ -17,7 +17,7 @@ public class Kungaboqar extends Osimlik {
     private int foiz = 0;
     private int jon = Tizim.KUNGABOQAR_JON;
 
-    private boolean ruxsat = false;
+    private boolean ekilgan = false;
 
     // Sun
     private final SunBornListener sunBornListener;
@@ -38,16 +38,18 @@ public class Kungaboqar extends Osimlik {
         this.sunBornListener = listener;
 
         t.getKeyFrames().add(new KeyFrame(Duration.millis(100), jarayon -> {
-            if (ruxsat) {
-                foiz++;
+            if (!ekilgan) {
+                return;
+            }
 
-                if (foiz == 20) {
-                    qoshish();
-                }
+            foiz++;
 
-                if (foiz == 100) {
-                    foiz = 0;
-                }
+            if (foiz == 20) {
+                qoshish();
+            }
+
+            if (foiz == 100) {
+                foiz = 0;
             }
 
             if (qulagan()) {
@@ -56,9 +58,8 @@ public class Kungaboqar extends Osimlik {
                 // Remove sunflower after it
                 ((AnchorPane) this.getParent()).getChildren().remove(this);
             }
-        }
-        ));
-        t.setCycleCount(-1);
+        }));
+        t.setCycleCount(Timeline.INDEFINITE);
         t.play();
     }
 
@@ -86,8 +87,8 @@ public class Kungaboqar extends Osimlik {
     /**
      * Permit planting sunflower
      */
-    public void ruxsatBerish() {
-        ruxsat = true;
+    public void ekildi() {
+        ekilgan = true;
     }
 
     public int y() {

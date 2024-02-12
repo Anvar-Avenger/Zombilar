@@ -183,7 +183,7 @@ public class Sahna {
                 ekish.play();
 
                 ekish(50);
-                kungaboqar.ruxsatBerish();
+                kungaboqar.ekildi();
 
                 // Check access to planting
                 ruxsat = false;
@@ -197,7 +197,7 @@ public class Sahna {
                 ekish.play();
                 ekish(100);
 
-                noxatotuvchi.ruxsat();
+                noxatotuvchi.ekildi();
 
                 ruxsat = false;
                 ruxsatN = false;

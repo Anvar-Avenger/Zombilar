@@ -149,7 +149,7 @@ public class Sahna {
             kungaboqar.setTranslateX(hodisa.getX() - kungaboqar.getFitWidth() / 2);
             kungaboqar.setTranslateY(hodisa.getY() - kungaboqar.getFitHeight() / 2);
 
-            if (kungaboqar.getTranslateY() > kungaboqar.y()) {
+            if (kungaboqar.getTranslateY() > kungaboqar.joylashuvY()) {
                 ochirishga = true;
             }
         }
@@ -158,7 +158,7 @@ public class Sahna {
             noxatotuvchi.setTranslateX(hodisa.getX() - noxatotuvchi.getFitWidth() / 2);
             noxatotuvchi.setTranslateY(hodisa.getY() - noxatotuvchi.getFitHeight() / 2);
 
-            if (noxatotuvchi.getTranslateY() > noxatotuvchi.y()) {
+            if (noxatotuvchi.getTranslateY() > noxatotuvchi.joylashuvY()) {
                 ochirishga = true;
             }
         }
@@ -167,7 +167,7 @@ public class Sahna {
             yongoq.setTranslateX(hodisa.getX() - yongoq.getFitWidth() / 2);
             yongoq.setTranslateY(hodisa.getY() - yongoq.getFitHeight() / 2);
 
-            if (yongoq.getTranslateY() > yongoq.y()) {
+            if (yongoq.getTranslateY() > yongoq.joylashuvY()) {
                 ochirishga = true;
             }
         }
@@ -182,8 +182,8 @@ public class Sahna {
             if (yol.joyBor(kungaboqar)) {
                 ekish.play();
 
-                ekish(50);
-                kungaboqar.ekildi();
+                int narx = kungaboqar.ekildi();
+                ekish(narx);
 
                 // Check access to planting
                 ruxsat = false;
@@ -195,9 +195,9 @@ public class Sahna {
         if (ruxsatN && ruxsat) {
             if (yol.joyBor(noxatotuvchi)) {
                 ekish.play();
-                ekish(100);
 
-                noxatotuvchi.ekildi();
+                int narx = noxatotuvchi.ekildi();
+                ekish(narx);
 
                 ruxsat = false;
                 ruxsatN = false;
@@ -208,7 +208,9 @@ public class Sahna {
         if (ruxsatY && ruxsat) {
             if (yol.joyBor(yongoq)) {
                 ekish.play();
-                ekish(50);
+
+                int narx = yongoq.ekildi();
+                ekish(narx);
 
                 ruxsat = false;
                 ruxsatY = false;

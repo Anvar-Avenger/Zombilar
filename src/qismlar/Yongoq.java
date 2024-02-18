@@ -6,9 +6,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import markaz.Tizim;
+import qismlar.qoidalar.IOsimlik;
 
 
-public class Yongoq extends Osimlik {
+public class Yongoq extends Osimlik implements IOsimlik {
 
     private Timeline t;
 
@@ -16,7 +17,7 @@ public class Yongoq extends Osimlik {
 
     public Yongoq() {
         setTranslateX(610);
-        setTranslateY(y());
+        setTranslateY(joylashuvY());
         setFitWidth(80);
         setFitHeight(90);
 
@@ -25,18 +26,6 @@ public class Yongoq extends Osimlik {
 
         // Check for die
         jarayon();
-    }
-
-    protected void zararlanish() {
-        jon--;
-    }
-
-    protected boolean qutordi() {
-        return jon < 1;
-    }
-
-    public int y() {
-        return 10;
     }
 
     private void jarayon() {
@@ -50,5 +39,25 @@ public class Yongoq extends Osimlik {
         }));
         t.setCycleCount(Timeline.INDEFINITE);
         t.play();
+    }
+
+    @Override
+    public int ekildi() {
+        return 50;
+    }
+
+    @Override
+    public void zararlanish() {
+        jon--;
+    }
+
+    @Override
+    public boolean qutordi() {
+        return jon < 1;
+    }
+
+    @Override
+    public int joylashuvY() {
+        return 10;
     }
 }

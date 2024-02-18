@@ -1,10 +1,11 @@
 package qismlar;
 
 import javafx.scene.image.ImageView;
+import qismlar.qoidalar.IOsimlik;
 
-public class Osimlik extends ImageView {
+public abstract class Osimlik extends ImageView implements IOsimlik {
 
-    int x, y;
+    private int x, y;
 
     public void nuqtaX(int x) {
         this.x = x;

@@ -6,34 +6,34 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import markaz.Tizim;
+import qismlar.qoidalar.IOsimlik;
 
 import java.util.ArrayList;
 
 
-public class Noxatotuvchi extends Osimlik {
+public class Noxatotuvchi extends Osimlik implements IOsimlik {
+
+    private int jon = Tizim.NOXATOTUVCHI_JON;
+    private int oraliq = 0;
 
     private final Image harakatda = new Image("zaxira/rasmlar/qismlar/noxatotuvchi.gif");
     private final Image erkin = new Image("zaxira/rasmlar/qismlar/noxatotuvchi-erkin.gif");
 
     private Timeline t;
 
+    // Holatlar
+    private boolean ekilgan = false;
+    private boolean jangovor = false;
+    private boolean tanladi = false; // This status check this flower select its enemy
+
     // Tashqi
     private Zombi zombi;
     private ArrayList<Zombi> zombilar;
 
-    private int oraliq = 0;
-    private int jon = Tizim.NOXATOTUVCHI_JON;
-
-    // Holatlar
-    private boolean ekilgan = false;
-    private boolean jangovor = false;
-
-    // This status check this flower select its enemy
-    private boolean tanladi = false;
 
     public Noxatotuvchi() {
         setTranslateX(510);
-        setTranslateY(y());
+        setTranslateY(joylashuvY());
 
         setFitWidth(94);
         setFitHeight(90);
@@ -48,7 +48,6 @@ public class Noxatotuvchi extends Osimlik {
     }
 
     private void harakatlanish() {
-
         jangovor = true;
 
         t = new Timeline(new KeyFrame(Duration.millis(20), jarayon -> {
@@ -78,7 +77,12 @@ public class Noxatotuvchi extends Osimlik {
                         jangovor = false;
                     }
 
-                    Noxat noxat = new Noxat(getTranslateX() + getFitWidth() * 3 / 4, getTranslateY() + 17, zombi);
+                    double nX = getTranslateX() + getFitWidth() * 3 / 4;
+                    double nY = getTranslateY() + 17;
+
+                    // For case when one more pie shooters shoot one zombie
+                    Noxat noxat = new Noxat(nX, nY, zombi, () -> zombi.zararlanish());
+
                     AnchorPane qobiq = (AnchorPane) this.getParent();
                     qobiq.getChildren().add(noxat);
                 }
@@ -114,19 +118,25 @@ public class Noxatotuvchi extends Osimlik {
         t.play();
     }
 
-    protected void zararlanish() {
+    @Override
+    public int ekildi() {
+        ekilgan = true;
+
+        return 100;
+    }
+
+    @Override
+    public void zararlanish() {
         jon--;
     }
 
-    public void ekildi() {
-        ekilgan = true;
-    }
-
-    protected boolean qutordi() {
+    @Override
+    public boolean qutordi() {
         return jon < 1;
     }
 
-    public int y() {
+    @Override
+    public int joylashuvY() {
         return 10;
     }
 }

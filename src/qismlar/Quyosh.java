@@ -17,9 +17,10 @@ public class Quyosh extends ImageView {
 
     private final int yorqinlik = Tizim.QUYOSH_YORQINLIGI;
 
+    private final int chetlanish = 15;
+
     private final QuyoshChiqishTinglovchisi tinglovchi;
 
-    private final int chetlanish = 15;
 
     Quyosh(double x, double y, QuyoshChiqishTinglovchisi tinglovchi) {
         setImage(new Image("zaxira/rasmlar/qismlar/quyosh.png"));
@@ -60,7 +61,7 @@ public class Quyosh extends ImageView {
                 jism.getChildren().remove(this);
 
                 // Notify sun fully rise
-                tinglovchi.onSunrise(yorqinlik);
+                tinglovchi.chiqdi(yorqinlik);
             });
             tt.play();
         });
@@ -69,6 +70,6 @@ public class Quyosh extends ImageView {
     // Listener to inter-components
     interface QuyoshChiqishTinglovchisi {
 
-        void onSunrise(int yorqinlik);
+        void chiqdi(int yorqinlik);
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import markaz.Tizim;
+import qismlar.qoidalar.IDushman;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,30 +16,25 @@ import java.util.Objects;
 import java.util.Random;
 
 
-public class Zombi extends ImageView {
+public class Zombi extends ImageView implements IDushman {
 
     private Timeline t;
 
     private final AudioClip ovoz;
     private final AudioClip oldi;
 
-    private final Yol yol = new Yol();
-
-    protected int[] y = yol.y;
-
     private int jon = Tizim.ZOMBI_JON;
-    private int v = 0;
+    private int tezlik = 0;
     private int foiz = 0;
+    private final int y;
 
-    private Kungaboqar kungaboqar;
-    private Noxatotuvchi noxatotuvchi;
-    private Yongoq yongoq;
+    private Osimlik osimlik;
 
     private ArrayList<Kungaboqar> kungaboqarlar;
     private ArrayList<Noxatotuvchi> noxatotuvchilar;
     private ArrayList<Yongoq> yongoqlar;
 
-    private boolean qichqirish = true;
+    private boolean chiqdi = true; // Sahna chiqdi
     private boolean belgilandi = false;
 
     private PlantEatListener tinglovchi;
@@ -49,13 +45,21 @@ public class Zombi extends ImageView {
         setFitWidth(80);
         setFitHeight(136);
 
-        setTranslateX(Tizim.EKRAN_ENI + 10 +
+        final Yol yol = new Yol();
+        int[] qatorlar = yol.y;
+
+        int zX = Tizim.EKRAN_ENI + 10 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
                 new Random().nextInt(100) * 2 +
-                new Random().nextInt(100) * 2);
-        setTranslateY(y[new Random().nextInt(y.length)] - getFitHeight() + yol.balandlik);
+                new Random().nextInt(100) * 2;
+
+        y = new Random().nextInt(qatorlar.length);
+        double zY = qatorlar[y] + (yol.balandlik - getFitHeight());
+
+        setTranslateX(zX);
+        setTranslateY(zY);
 
         URL uOvoz = getClass().getResource("/zaxira/ovozli-fayllar/zombi.wav");
         URL uOldi = getClass().getResource("/zaxira/ovozli-fayllar/vox.wav");
@@ -82,112 +86,22 @@ public class Zombi extends ImageView {
     }
 
     private void harakat() {
-        v = -1;
+        tezlik = -1;
 
         // 30 kard/s
         t = new Timeline(new KeyFrame(Duration.millis(1000 / 30.), jarayon -> {
             if (!belgilandi) {
-                kungaboqarlar.forEach(kungaboqar -> {
-                    if (getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() &&
-                            getTranslateY() + getFitHeight() == kungaboqar.getTranslateY() + kungaboqar.getFitHeight()) {
-                        this.kungaboqar = kungaboqar;
-                        belgilandi = true;
-                    }
-                });
-                noxatotuvchilar.forEach(noxatotuvchi -> {
-                    if (getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() &&
-                            getTranslateY() + getFitHeight() == noxatotuvchi.getTranslateY() + noxatotuvchi.getFitHeight()) {
-                        this.noxatotuvchi = noxatotuvchi;
-                        belgilandi = true;
-                    }
-                });
-                yongoqlar.forEach(yongoq -> {
-                    if (getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() &&
-                            getTranslateY() + getFitHeight() == yongoq.getTranslateY() + yongoq.getFitHeight()) {
-                        this.yongoq = yongoq;
-                        belgilandi = true;
-                    }
-                });
+                tanlash();
+            } else {
+                yeyish();
             }
-
-            /* qismlar.Kungaboqar uchun */
-            if (kungaboqar != null) {
-                if (getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() - 10 &&
-                        getTranslateX() > kungaboqar.getTranslateX()) {
-                    foiz++;
-                    if (foiz == 100) {
-                        kungaboqar.zararlanish();
-                        foiz = 0;
-                    }
-
-                    v = 0;
-                }
-
-                if (kungaboqar.qulagan()) {
-                    belgilandi = false;
-                    v = -1;
-
-                    tinglovchi.onEat(kungaboqar);
-
-                    kungaboqarlar.removeIf(jism -> jism == kungaboqar);
-                    kungaboqar = null;
-
-                    foiz = 0;
-                }
-            }
-            /*~*/
-
-            /* qismlar.Noxatotuvchi uchun */
-            if (noxatotuvchi != null) {
-                if (getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() - 10 &&
-                        getTranslateX() > noxatotuvchi.getTranslateX()) {
-                    foiz++;
-                    if (foiz == 100) {
-                        noxatotuvchi.zararlanish();
-                        foiz = 0;
-                    }
-                    v = 0;
-                }
-
-                if (noxatotuvchi.qutordi()) {
-                    belgilandi = false;
-                    v = -1;
-
-                    noxatotuvchilar.removeIf(ochirishga -> ochirishga == noxatotuvchi);
-                    noxatotuvchi = null;
-                    foiz = 0;
-                }
-            }
-            /*~*/
-
-            /* Yong'oq uchun */
-            if (yongoq != null) {
-                if (getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() - 10 &&
-                        getTranslateX() > yongoq.getTranslateX()) {
-                    foiz++;
-                    if (foiz == 100) {
-                        yongoq.zararlanish();
-                        foiz = 0;
-                    }
-                    v = 0;
-                }
-
-                if (yongoq.qutordi()) {
-                    belgilandi = false;
-                    v = -1;
-                    yongoqlar.removeIf(ochirishga -> ochirishga == yongoq);
-                    yongoq = null;
-                    foiz = 0;
-                }
-            }
-            /*~*/
 
             // Move to x
-            setTranslateX(getTranslateX() + v);
+            setTranslateX(getTranslateX() + tezlik);
 
-            if (getTranslateX() < 1200 && qichqirish) {
+            if (bor() && chiqdi) {
                 ovoz.play();
-                qichqirish = false;
+                chiqdi = false;
             }
 
             if (getTranslateX() < 0 || qutordi()) {
@@ -206,16 +120,90 @@ public class Zombi extends ImageView {
         t.play();
     }
 
-    protected void zararlanish() {
+    private void tanlash() {
+        kungaboqarlar.forEach(kungaboqar -> {
+            // this.getTranslateY() + this.getFitHeight() == kungaboqar.getTranslateY() + kungaboqar.getFitHeight()
+            if (this.getTranslateX() <= kungaboqar.getTranslateX() + kungaboqar.getFitWidth() &&
+                    kungaboqar.nuqtaY() == this.y) {
+                this.osimlik = kungaboqar; // this.kungaboqar = kungaboqar;
+                belgilandi = true;
+            }
+        });
+
+        if (belgilandi)
+            return;
+        noxatotuvchilar.forEach(noxatotuvchi -> {
+            // this.getTranslateY() + this.getFitHeight() == noxatotuvchi.getTranslateY() + noxatotuvchi.getFitHeight()
+            if (this.getTranslateX() <= noxatotuvchi.getTranslateX() + noxatotuvchi.getFitWidth() &&
+                    noxatotuvchi.nuqtaY() == this.y) {
+                this.osimlik = noxatotuvchi; // this.noxatotuvchi = noxatotuvchi;
+                belgilandi = true;
+            }
+        });
+
+        if (belgilandi)
+            return;
+        yongoqlar.forEach(yongoq -> {
+            // this.getTranslateY() + this.getFitHeight() == yongoq.getTranslateY() + yongoq.getFitHeight()
+            if (this.getTranslateX() <= yongoq.getTranslateX() + yongoq.getFitWidth() &&
+                    yongoq.nuqtaY() == this.y) {
+
+                this.osimlik = yongoq; // this.yongoq = yongoq;
+                belgilandi = true;
+            }
+        });
+    }
+
+    private void yeyish() {
+        if (this.getTranslateX() <= osimlik.getTranslateX() + osimlik.getFitWidth() - 10 &&
+                this.getTranslateX() > osimlik.getTranslateX()) {
+
+            foiz++;
+
+            if (foiz == 100) {
+                osimlik.zararlanish();
+                foiz = 0;
+            }
+
+            tezlik = 0;
+        }
+
+        if (osimlik.qutordi()) {
+            belgilandi = false;
+            tezlik = -1;
+
+            tinglovchi.onEat(osimlik);
+
+            if (osimlik instanceof Kungaboqar) {
+                kungaboqarlar.removeIf(jism -> jism == osimlik);
+            }
+
+            if (osimlik instanceof Noxatotuvchi) {
+                noxatotuvchilar.removeIf(jism -> jism == osimlik);
+            }
+
+            if (osimlik instanceof Yongoq) {
+                yongoqlar.removeIf(jism -> jism == osimlik);
+            }
+
+            osimlik = null;
+            foiz = 0;
+        }
+    }
+
+    @Override
+    public void zararlanish() {
         jon--;
     }
 
-    protected boolean qutordi() {
+    @Override
+    public boolean qutordi() {
         return jon < 1;
     }
 
-    protected boolean bor() {
-        return getTranslateX() + getFitWidth() / 2 < Tizim.EKRAN_ENI;
+    @Override
+    public boolean bor() {
+        return getTranslateX() + getFitWidth() / 2 < Tizim.EKRAN_ENI;  // Tizim.EKRAN_ENI - 136
     }
 
     public interface PlantEatListener {

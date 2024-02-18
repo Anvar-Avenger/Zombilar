@@ -8,26 +8,27 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import markaz.Tizim;
+import qismlar.qoidalar.IOsimlik;
 
 
-public class Kungaboqar extends Osimlik {
+public class Kungaboqar extends Osimlik implements IOsimlik {
 
     private final Timeline t = new Timeline();
 
-    private int foiz = 0;
     private int jon = Tizim.KUNGABOQAR_JON;
+    private int foiz = 0;
 
     private boolean ekilgan = false;
 
     // Sun
-    private final SunBornListener sunBornListener;
+    private final QuyoshChiqishTinglovchisi tinglovchi;
 
-    public Kungaboqar(SunBornListener listener) {
+    public Kungaboqar(QuyoshChiqishTinglovchisi tinglovchi) {
         Image rasm = new Image("zaxira/rasmlar/qismlar/kungaboqar.gif");
 
         // Set position
         setTranslateX(410);
-        setTranslateY(y());
+        setTranslateY(joylashuvY());
 
         // Set with and height
         setFitWidth(rasm.getWidth() < 100 ? rasm.getWidth() : 100);
@@ -35,8 +36,12 @@ public class Kungaboqar extends Osimlik {
 
         setImage(rasm);
 
-        this.sunBornListener = listener;
+        this.tinglovchi = tinglovchi;
 
+        harakat();
+    }
+
+    private void harakat() {
         t.getKeyFrames().add(new KeyFrame(Duration.millis(100), jarayon -> {
             if (!ekilgan) {
                 return;
@@ -52,7 +57,7 @@ public class Kungaboqar extends Osimlik {
                 foiz = 0;
             }
 
-            if (qulagan()) {
+            if (qutordi()) {
                 t.stop();
 
                 // Remove sunflower after it
@@ -65,7 +70,7 @@ public class Kungaboqar extends Osimlik {
 
     private void qoshish() {
         // Create new sun
-        Quyosh quyosh = new Quyosh(getTranslateX(), getTranslateY() - 5, sunBornListener::onSunrise);
+        Quyosh quyosh = new Quyosh(getTranslateX(), getTranslateY() - 5, tinglovchi::quyoshChiqdi);
 
         // Append sun to parent node
         AnchorPane jism = (AnchorPane) this.getParent();
@@ -87,27 +92,32 @@ public class Kungaboqar extends Osimlik {
     /**
      * Permit planting sunflower
      */
-    public void ekildi() {
+    @Override
+    public int ekildi() {
         ekilgan = true;
+
+        return 50;
     }
 
-    public int y() {
-        return 10;
-    }
-
-    protected void zararlanish() {
+    @Override
+    public void zararlanish() {
         jon--;
     }
 
     /**
      * To check sunflower is dead
      */
-    protected boolean qulagan() {
+    @Override
+    public boolean qutordi() {
         return jon < 1;
     }
 
+    @Override
+    public int joylashuvY() {
+        return 10;
+    }
 
-    public interface SunBornListener {
-        void onSunrise(int brightness);
+    public interface QuyoshChiqishTinglovchisi {
+        void quyoshChiqdi(int yorqinlik);
     }
 }

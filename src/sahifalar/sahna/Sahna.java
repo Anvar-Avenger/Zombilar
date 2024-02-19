@@ -51,15 +51,21 @@ public class Sahna {
     protected AudioClip musiqa;
     protected AudioClip uzish;
     protected AudioClip ekish;
+    private AudioClip tugashi;
+    private AudioClip yutish;
 
     public void initialize() {
         URL uMusiqa = getClass().getResource("/zaxira/ovozli-fayllar/sahna-musiqasi.aac");
         URL uUzish = getClass().getResource("/zaxira/ovozli-fayllar/uzish.wav");
         URL uEkish = getClass().getResource("/zaxira/ovozli-fayllar/joylash.wav");
+        URL uTugash = getClass().getResource("/zaxira/ovozli-fayllar/game-over.mp3");
+        URL uYutish = getClass().getResource("/zaxira/ovozli-fayllar/win.mp3");
 
         musiqa = new AudioClip(Objects.requireNonNull(uMusiqa).toString());
         uzish = new AudioClip(Objects.requireNonNull(uUzish).toString());
         ekish = new AudioClip(Objects.requireNonNull(uEkish).toString());
+        tugashi = new AudioClip(Objects.requireNonNull(uTugash).toString());
+        yutish = new AudioClip(Objects.requireNonNull(uYutish).toString());
 
         musiqa.play();
 
@@ -72,7 +78,10 @@ public class Sahna {
             zombi.Noxatotuvchi(noxatotuvchilar);
             zombi.Kungaboqar(kungaboqarlar);
             zombi.Yongoq(yongoqlar);
-            zombi.addPlantEatListener(osimlik -> yol.joyOchish(osimlik.nuqtaX(), osimlik.nuqtaY()));
+
+            // Listeners
+            zombi.yeyishTinglovchisiBiriktirish(osimlik -> yol.joyOchish(osimlik.nuqtaX(), osimlik.nuqtaY()));
+            zombi.yakunlashTinglovchiBiriktirish(this::tugatish);
 
             // Add zombie to scene and zombies list
             zombilar.add(zombi);
@@ -91,10 +100,24 @@ public class Sahna {
         tt.play();
     }
 
+    private void tugatish(Zombi zombi) {
+        musiqa.stop();
+
+        zombilar.forEach(z -> {
+            if (z != zombi) {
+                z.toxtat();
+            }
+        });
+
+        kungaboqarlar.forEach(Kungaboqar::toxtat);
+
+        tugashi.play();
+    }
+
     @FXML
     void KungaboqarYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatK && quyoshYetarli(50)) {
+            if (!ruxsatK && hisobYetarli(50)) {
                 uzish.play();
 
                 kungaboqar = new Kungaboqar(this::jamlash);
@@ -110,7 +133,7 @@ public class Sahna {
     @FXML
     void NoxatotuvchiYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatN && quyoshYetarli(100)) {
+            if (!ruxsatN && hisobYetarli(100)) {
                 uzish.play();
 
                 noxatotuvchi = new Noxatotuvchi();
@@ -127,7 +150,7 @@ public class Sahna {
     @FXML
     void YongoqYaratish(MouseEvent hodisa) {
         if (hodisa.getClickCount() > 0)
-            if (!ruxsatY && quyoshYetarli(50)) {
+            if (!ruxsatY && hisobYetarli(50)) {
                 uzish.play();
 
                 yongoq = new Yongoq();
@@ -139,8 +162,9 @@ public class Sahna {
             }
     }
 
+    /* Narsani joyinnon yilishtirish */
     @FXML
-    void Kochish(MouseEvent hodisa) {
+    void Yilishtirish(MouseEvent hodisa) {
         if (!ruxsat) {
             return;
         }
@@ -221,7 +245,7 @@ public class Sahna {
 
     private void Ochirish() {
         if (ruxsatK) {
-            if (ochirish(gul, kungaboqar) && ochirishga) {
+            if (ochadimi(gul, kungaboqar) && ochirishga) {
                 muhit.getChildren().remove(kungaboqar);
 
                 kungaboqarlar.remove(kungaboqar);
@@ -231,7 +255,7 @@ public class Sahna {
         }
 
         if (ruxsatN) {
-            if (ochirish(noxatchi, noxatotuvchi) && ochirishga) {
+            if (ochadimi(noxatchi, noxatotuvchi) && ochirishga) {
                 muhit.getChildren().remove(noxatotuvchi);
 
                 noxatotuvchilar.remove(noxatotuvchi);
@@ -241,7 +265,7 @@ public class Sahna {
         }
 
         if (ruxsatY) {
-            if (ochirish(devor, yongoq) && ochirishga) {
+            if (ochadimi(devor, yongoq) && ochirishga) {
                 muhit.getChildren().remove(yongoq);
 
                 yongoqlar.remove(yongoq);
@@ -251,7 +275,8 @@ public class Sahna {
         }
     }
 
-    private boolean ochirish(Pane jism, ImageView osimlik) {
+    // Check for remove
+    private boolean ochadimi(Pane jism, ImageView osimlik) {
         return !(osimlik.getTranslateX() + 20 < jism.getParent().getLayoutX() + jism.getLayoutX() ||
                 osimlik.getTranslateX() + osimlik.getFitWidth() - 20 > jism.getParent().getLayoutX() + jism.getLayoutX() + jism.getWidth() ||
                 osimlik.getTranslateY() + 5 < jism.getLayoutY() ||
@@ -259,7 +284,7 @@ public class Sahna {
     }
 
     /*** Quyosh ***/
-    private boolean quyoshYetarli(int baho) {
+    private boolean hisobYetarli(int baho) {
         return baho <= ochko;
     }
 

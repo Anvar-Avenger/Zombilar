@@ -81,7 +81,11 @@ public class Noxatotuvchi extends Osimlik implements IOsimlik {
                     double nY = getTranslateY() + 17;
 
                     // For case when one more pie shooters shoot one zombie
-                    Noxat noxat = new Noxat(nX, nY, zombi, () -> zombi.zararlanish());
+                    Noxat noxat = new Noxat(nX, nY, zombi, () -> {
+                        if (zombi != null) {
+                            zombi.zararlanish();
+                        }
+                    });
 
                     AnchorPane qobiq = (AnchorPane) this.getParent();
                     qobiq.getChildren().add(noxat);
@@ -122,7 +126,7 @@ public class Noxatotuvchi extends Osimlik implements IOsimlik {
     public int ekildi() {
         ekilgan = true;
 
-        return 100;
+        return Tizim.NOXATOTUVCHI_NARX;
     }
 
     @Override

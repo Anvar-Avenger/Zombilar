@@ -43,7 +43,7 @@ public class Yongoq extends Osimlik implements IOsimlik {
 
     @Override
     public int ekildi() {
-        return 50;
+        return Tizim.YONGOQ_NARX;
     }
 
     @Override

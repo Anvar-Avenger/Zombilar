@@ -12,6 +12,7 @@
 
 ### Havolalar
 - [Illegal Access Exception](https://stackoverflow.com/questions/70027326/the-media-class-causes-javafx-to-crash)
+- [Music](https://tuna.voicemod.net/sound/1c0e0119-817d-471a-a58b-f949a00dd2e7)
 
 
 ### Eslatmalar

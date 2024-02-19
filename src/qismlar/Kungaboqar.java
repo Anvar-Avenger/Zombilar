@@ -89,6 +89,10 @@ public class Kungaboqar extends Osimlik implements IOsimlik {
         st.play();
     }
 
+    public void toxtat() {
+        t.stop();
+    }
+
     /**
      * Permit planting sunflower
      */
@@ -96,7 +100,7 @@ public class Kungaboqar extends Osimlik implements IOsimlik {
     public int ekildi() {
         ekilgan = true;
 
-        return 50;
+        return Tizim.KUNGABOQAR_NARX;
     }
 
     @Override

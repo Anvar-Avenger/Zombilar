@@ -34,10 +34,11 @@ public class Zombi extends ImageView implements IDushman {
     private ArrayList<Noxatotuvchi> noxatotuvchilar;
     private ArrayList<Yongoq> yongoqlar;
 
-    private boolean chiqdi = true; // Sahna chiqdi
+    private boolean sahnagaChiqdi = true; // Sahna chiqdi
     private boolean belgilandi = false;
 
-    private PlantEatListener tinglovchi;
+    private OsimlikYeyishTinglovchisi tinglovchi;
+    private YakunlashTinglovchisi yakunlovchi;
 
     public Zombi() {
         // Set width and height
@@ -81,8 +82,12 @@ public class Zombi extends ImageView implements IDushman {
         this.yongoqlar = yongoqlar;
     }
 
-    public void addPlantEatListener(PlantEatListener listener) {
+    public void yeyishTinglovchisiBiriktirish(OsimlikYeyishTinglovchisi listener) {
         this.tinglovchi = listener;
+    }
+
+    public void yakunlashTinglovchiBiriktirish(YakunlashTinglovchisi tinglovchi) {
+        this.yakunlovchi = tinglovchi;
     }
 
     private void harakat() {
@@ -99,17 +104,19 @@ public class Zombi extends ImageView implements IDushman {
             // Move to x
             setTranslateX(getTranslateX() + tezlik);
 
-            if (bor() && chiqdi) {
+            if (bor() && sahnagaChiqdi) {
                 ovoz.play();
-                chiqdi = false;
+                sahnagaChiqdi = false;
             }
 
-            if (getTranslateX() < 0 || qutordi()) {
+            if (getTranslateX() < Tizim.UY_ESHIGI && yakunlovchi != null) {
+                yakunlovchi.uygaKirdi(this);
+            }
+
+            if (getTranslateX() < Tizim.UY_ESHIGI || qutordi()) {
                 oldi.play();
 
-                // Remove Zombie from view
-                AnchorPane jism = (AnchorPane) this.getParent();
-                jism.getChildren().remove(this);
+                this.qulash();
 
                 t.stop();
             }
@@ -118,6 +125,12 @@ public class Zombi extends ImageView implements IDushman {
         t.setDelay(Duration.seconds(30));
         t.setCycleCount(Timeline.INDEFINITE);
         t.play();
+    }
+
+    private void qulash() {
+        // Remove Zombie from view
+        AnchorPane jism = (AnchorPane) this.getParent();
+        jism.getChildren().remove(this);
     }
 
     private void tanlash() {
@@ -172,7 +185,7 @@ public class Zombi extends ImageView implements IDushman {
             belgilandi = false;
             tezlik = -1;
 
-            tinglovchi.onEat(osimlik);
+            tinglovchi.yeganPayti(osimlik);
 
             if (osimlik instanceof Kungaboqar) {
                 kungaboqarlar.removeIf(jism -> jism == osimlik);
@@ -192,6 +205,11 @@ public class Zombi extends ImageView implements IDushman {
     }
 
     @Override
+    public void toxtat() {
+        t.stop();
+    }
+
+    @Override
     public void zararlanish() {
         jon--;
     }
@@ -206,7 +224,13 @@ public class Zombi extends ImageView implements IDushman {
         return getTranslateX() + getFitWidth() / 2 < Tizim.EKRAN_ENI;  // Tizim.EKRAN_ENI - 136
     }
 
-    public interface PlantEatListener {
-        void onEat(Osimlik osimlik);
+    // PlantEatListener
+    public interface OsimlikYeyishTinglovchisi {
+        void yeganPayti(Osimlik osimlik);
+    }
+
+    public interface YakunlashTinglovchisi {
+        /* onReachHouse */
+        void uygaKirdi(Zombi zombi);
     }
 }

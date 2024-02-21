@@ -1,4 +1,4 @@
-# O&#8216;simlar va Zombilar
+# O&#8216;simliklar va Zombilar
 
 ## Ishga tushurish
 - `Download JavaFX SDK`
